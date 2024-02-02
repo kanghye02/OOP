@@ -18,7 +18,7 @@ class loginUi(QMainWindow): #login window
     def login(self):
         un = self.UserName.text() #nhan ra ten tu man dang nhap
         pw = self.UserPW.text()#nhan ra mat khau tu man dang nhap
-        db = mysql.connector.connect(user='root', password='root', host='localhost',database= 'OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost',database= 'OOAD')
         cs = db.cursor()
         cs.execute("select * from Users where Username = '"+un+"' and Password='"+pw+"'")  #chon tai khoan
         kt = cs.fetchone()
@@ -68,7 +68,7 @@ class adminUi(QMainWindow):
         return dateSelected
     def updateTaskList(self, date): #doc du lieu tu database ve lich hen moi ngay
         self.listWidget.clear()
-        db = mysql.connector.connect(user='root', password='root', host='localhost',database= 'OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost',database= 'OOAD')
         cs = db.cursor()
         formatted_date = date.strftime("%Y-%m-%d")
         cs.execute("select up.Username,ud.Username,a.time, a.Status from appointment a left join dentist d on a.DentistId = d.id left join patient p on a.PatientId = p.id left join Users ud on ud.id = d.userId left join Users up on up.id = p.userId where date = '"+formatted_date+"'order by a.time")
@@ -94,7 +94,7 @@ class adminUi(QMainWindow):
         if selected_item is not None:
             index = self.listWidget.currentRow()# row(selected_item)
         print(index)
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
         bb = db.cursor()
         formatted_date = date.strftime("%Y-%m-%d")
@@ -120,10 +120,10 @@ class adminUi(QMainWindow):
         self.updateTaskList(date)
         QMessageBox.information(self, "LoginOutput", "Update thanh cong")
     def setBill(self):#hien bill ra
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
         #nha sy, benh nhan, dich vu, so luong, don gia, thanh tien
-        cs.execute("select b.doctor,b.patient,s.ServiceName,B.quantity,s.price,B.Subtotal from bill b left join Billdetail B on b.BilldetailId = B.id left join services s on B.serviceId = s.id where b.Date = CURDATE()")
+        cs.execute("SELECT b.doctor, b.patient, s.ServiceName, bd.quantity, s.price, bd.Subtotal FROM bill b LEFT JOIN Billdetail bd ON b.BilldetailId = bd.id LEFT JOIN services s ON bd.serviceId = s.id WHERE b.Date = CURDATE()")
         results = cs.fetchall() #ma tran
         self.tableWidget.setRowCount(100)
 
@@ -164,7 +164,7 @@ class doctorUi(QMainWindow) : # doctor window
         return dateSelected
     def updateTaskList(self, date): #doc du lieu tu database ve lich hen moi ngay
         self.listWidget.clear()
-        db = mysql.connector.connect(user='root', password='root', host='localhost',database= 'OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost',database= 'OOAD')
         cs = db.cursor()
         formatted_date = date.strftime("%Y-%m-%d")
         cs.execute("select up.Username,a.time, a.Status,a.id from appointment a left join dentist d on a.DentistId = d.id left join patient p on a.PatientId = p.id left join Users ud on ud.id = d.userId left join Users up on up.id = p.userId where date = %s and ud.Username = %s order by a.time",(formatted_date,self.un))
@@ -190,7 +190,7 @@ class doctorUi(QMainWindow) : # doctor window
             if selected_item is not None:
                 index = self.listWidget.currentRow()#row(selected_item)
                 print(index)
-                db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+                db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
                 cs = db.cursor()
                 bb = db.cursor()
                 formatted_date = date.strftime("%Y-%m-%d")
@@ -224,7 +224,7 @@ class doctorUi(QMainWindow) : # doctor window
         Sv = self.service.currentText()
         Qt = self.quantity.text()
         Qt = int(Qt)
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
         cs.execute("select * from services where ServiceName = '"+Sv+"'") #
         Sv = cs.fetchone()
@@ -237,7 +237,7 @@ class doctorUi(QMainWindow) : # doctor window
         return AI,Pt,Dt,Date,Time,Sv,Qt,Psv,Isv,totalBill
     @staticmethod
     def insertintoBilldetail(ServiceId, quantity, Subtotal):#truyen gia tri vao bang Billdetail
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
         cs.execute("insert into Billdetail(ServiceId, quantity,Subtotal) values (%s,%s,%s)",
                    (ServiceId, quantity, Subtotal))
@@ -252,7 +252,7 @@ class doctorUi(QMainWindow) : # doctor window
     def insertintoBill(self): #truyen gia tri vao bang Bill
         AI,Pt,Dt,Date,Time,Sv,Qt,Psv,Isv,totalBill =self.CfRc()
         id = self.insertintoBilldetail(Isv,Qt,totalBill)
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
         print(type(AI))
         print(type(Date))
@@ -268,7 +268,7 @@ class doctorUi(QMainWindow) : # doctor window
         db.commit()
         QMessageBox.information(self, "Hóa đơn", "Hóa đơn được gửi thành công")
 
-class patientUi(QMainWindow) : # doctor window
+class patientUi(QMainWindow) : # patient window
     def __init__(self,un:str,pw:str):
 
         super(patientUi, self).__init__()
@@ -337,7 +337,7 @@ class patientUi(QMainWindow) : # doctor window
 
         DN, Time, formatted_date = self.fillBang()
         self.showLich.takeItem(self.showLich.count()-1)
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
 
         cs = db.cursor()
 
@@ -360,7 +360,7 @@ class patientUi(QMainWindow) : # doctor window
 
     def updateTaskList(self, date):
         self.showLich.clear()
-        db = mysql.connector.connect(user='root', password='root', host='localhost',database= 'OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost',database= 'OOAD')
         cs = db.cursor()
         formatted_date = date.strftime("%Y-%m-%d")
         cs.execute("select ud.Username, a.Status, a.time from appointment a left join dentist d on a.DentistId = d.id left join patient p on a.PatientId = p.id left join Users ud on ud.id = d.userId left join Users up on up.id = p.userId where date = %s and up.Username = %s",(formatted_date,self.un))
@@ -378,7 +378,7 @@ class patientUi(QMainWindow) : # doctor window
             print(str(result[0])+str(result[1]))
             self.showLich.addItem(item)
     def loaddata(self):
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
 
         tablerow = 0
@@ -395,10 +395,10 @@ class patientUi(QMainWindow) : # doctor window
             widget.addWidget(login_f)
             widget.setCurrentIndex(0)
     def setHistory(self): #lay tu database hien ra bang lichsu
-        db = mysql.connector.connect(user='root', password='root', host='localhost', database='OOAD')
+        db = mysql.connector.connect(user='root', password='Huy2002@', host='localhost', database='OOAD')
         cs = db.cursor()
         # nha sy, ngay, gio, dich vu, so luong, thanh tien cua cai thang benh nhan
-        cs.execute("select b.doctor,b.Date,b.time,s.ServiceName,B.quantity,B.Subtotal from bill b left join Billdetail B on b.BilldetailId = B.id left join services s on B.serviceId = s.id where b.patient = '"+self.un+"'order by b.Date desc")
+        cs.execute("SELECT b.doctor, b.Date, b.time, s.ServiceName, bd.quantity, bd.Subtotal FROM bill b LEFT JOIN Billdetail bd ON b.BilldetailId = bd.id LEFT JOIN services s ON bd.serviceId = s.id WHERE b.patient = '" + self.un + "' ORDER BY b.Date DESC")
         results = cs.fetchall()
         self.tableWidget2.setRowCount(100)
 
